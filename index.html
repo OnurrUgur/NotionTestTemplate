@@ -24,7 +24,7 @@
             border-radius: 8px;
             margin: 10px;
             padding: 10px;
-            width: 300px;
+            width: 500px;
         }
         
         table {
@@ -54,6 +54,12 @@
             font-weight: bold;
             font-size: 16px;
         }
+        
+        .symbol {
+            width: 48px;
+            height: 48px;
+            padding: 0;
+        }
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
@@ -64,12 +70,16 @@
                 var currencies = data.data;
                 var table = '<table>';
                 
+                table += '<tr><th>Symbol</th><th>Name</th><th>Price (USD)</th></tr>';
+                
                 for (var i = 0; i < currencies.length; i++) {
                     var currency = currencies[i];
+                    var symbol = currency.symbol;
                     var name = currency.name;
                     var price = currency.priceUsd;
+                    var imageSrc = 'data:image/svg+xml,' + encodeURIComponent(generateSymbolImage(symbol)); // Generate SVG image
                     
-                    table += '<tr><td class="currency-name">' + name + '</td><td class="price">$' + price + '</td></tr>';
+                    table += '<tr><td class="symbol"><img src="' + imageSrc + '" alt="' + symbol + '" width="48" height="48"></td><td class="currency-name">' + name + '</td><td class="price">$' + price + '</td></tr>';
                 }
                 
                 table += '</table>';
@@ -77,11 +87,21 @@
             });
         }
         
+        // Generate SVG image for the symbol
+        function generateSymbolImage(symbol) {
+            return `
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
+                    <rect width="48" height="48" fill="#2c2c2c"/>
+                    <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="20" fill="#ffffff">${symbol}</text>
+                </svg>
+            `;
+        }
+        
         $(document).ready(function() {
             fetchData();
             
-            // Refresh data every 1 minute
-            setInterval(fetchData, 60000);
+            // Refresh data every 10 minutes
+            setInterval(fetchData, 600000);
         });
     </script>
 </head>
