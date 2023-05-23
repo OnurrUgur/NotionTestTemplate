@@ -37,9 +37,17 @@
 
         data.forEach((crypto, index) => {
           const row = table.insertRow(index + 1);
-          row.insertCell(0).textContent = crypto.symbol;
-          row.insertCell(1).textContent = crypto.name;
-          row.insertCell(2).textContent = '$' + crypto.current_price.toLocaleString();
+          const symbolCell = row.insertCell(0);
+          const nameCell = row.insertCell(1);
+          const priceCell = row.insertCell(2);
+
+          const symbolImg = document.createElement('img');
+          symbolImg.src = crypto.image;
+          symbolImg.alt = crypto.symbol;
+          symbolCell.appendChild(symbolImg);
+
+          nameCell.textContent = crypto.name;
+          priceCell.textContent = '$' + crypto.current_price.toLocaleString();
         });
       })
       .catch(error => console.log(error));
