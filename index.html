@@ -19,7 +19,7 @@
 </head>
 <body>
   <h1>Top 10 Cryptocurrencies</h1>
-  <table>
+  <table id="cryptoTable">
     <tr>
       <th>Rank</th>
       <th>Name</th>
@@ -28,24 +28,27 @@
       <th>Market Cap (USD)</th>
       <th>24h Volume (USD)</th>
     </tr>
-    <tr>
-      <td>1</td>
-      <td>Bitcoin</td>
-      <td>BTC</td>
-      <td>$47,980</td>
-      <td>$900,567,890,123</td>
-      <td>$56,789,012,345</td>
-    </tr>
-    <tr>
-      <td>2</td>
-      <td>Ethereum</td>
-      <td>ETH</td>
-      <td>$3,456</td>
-      <td>$123,456,789,012</td>
-      <td>$9,012,345,678</td>
-    </tr>
-    <!-- Repeat the above row structure for the remaining cryptocurrencies -->
-    <!-- Add more <tr> elements for the other cryptocurrencies -->
   </table>
+
+  <script>
+    // Fetch data from CoinGecko API
+    fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1')
+      .then(response => response.json())
+      .then(data => {
+        // Populate table with fetched data
+        const table = document.getElementById('cryptoTable');
+
+        data.forEach((crypto, index) => {
+          const row = table.insertRow(index + 1);
+          row.insertCell(0).textContent = crypto.market_cap_rank;
+          row.insertCell(1).textContent = crypto.name;
+          row.insertCell(2).textContent = crypto.symbol;
+          row.insertCell(3).textContent = '$' + crypto.current_price.toLocaleString();
+          row.insertCell(4).textContent = '$' + crypto.market_cap.toLocaleString();
+          row.insertCell(5).textContent = '$' + crypto.total_volume.toLocaleString();
+        });
+      })
+      .catch(error => console.log(error));
+  </script>
 </body>
 </html>
