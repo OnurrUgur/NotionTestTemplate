@@ -53,7 +53,7 @@
             const priceCell = row.insertCell(2);
 
             const symbolImg = document.createElement('img');
-            symbolImg.src = crypto.image;
+            symbolImg.src = getSymbolImageUrl(crypto.symbol); // Replace with image URL for the symbol
             symbolImg.alt = crypto.symbol;
             symbolImg.classList.add('crypto-img'); // Apply CSS class for image size
             symbolCell.appendChild(symbolImg);
@@ -63,6 +63,18 @@
           });
         })
         .catch(error => console.log(error));
+    }
+
+    function getSymbolImageUrl(symbol) {
+      // Map currency symbols to image URLs
+      const symbolImageMap = {
+        BTC: 'https://example.com/btc.png',
+        ETH: 'https://example.com/eth.png',
+        // Add more symbol-image mappings here
+      };
+
+      // Return the image URL for the symbol
+      return symbolImageMap[symbol] || '';
     }
 
     function refreshPage() {
