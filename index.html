@@ -3,6 +3,10 @@
 <head>
   <title>Top 10 Cryptocurrencies</title>
   <style>
+    body {
+      background-color: navy;
+      color: white;
+    }
     table {
       width: 100%;
       border-collapse: collapse;
@@ -15,10 +19,15 @@
     th {
       background-color: #f2f2f2;
     }
+    .crypto-img {
+      width: 48px;
+      height: 48px;
+    }
   </style>
 </head>
 <body>
   <h1>Top 10 Cryptocurrencies</h1>
+  <button onclick="refreshPage()">Refresh</button>
   <table id="cryptoTable">
     <tr>
       <th>Symbol</th>
@@ -29,28 +38,40 @@
 
   <script>
     // Fetch data from CoinGecko API
-    fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1')
-      .then(response => response.json())
-      .then(data => {
-        // Populate table with fetched data
-        const table = document.getElementById('cryptoTable');
+    function fetchData() {
+      fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1')
+        .then(response => response.json())
+        .then(data => {
+          // Clear previous table data
+          const table = document.getElementById('cryptoTable');
+          table.innerHTML = '';
 
-        data.forEach((crypto, index) => {
-          const row = table.insertRow(index + 1);
-          const symbolCell = row.insertCell(0);
-          const nameCell = row.insertCell(1);
-          const priceCell = row.insertCell(2);
+          // Populate table with fetched data
+          data.forEach((crypto, index) => {
+            const row = table.insertRow(index);
+            const symbolCell = row.insertCell(0);
+            const nameCell = row.insertCell(1);
+            const priceCell = row.insertCell(2);
 
-          const symbolImg = document.createElement('img');
-          symbolImg.src = crypto.image;
-          symbolImg.alt = crypto.symbol;
-          symbolCell.appendChild(symbolImg);
+            const symbolImg = document.createElement('img');
+            symbolImg.src = crypto.image;
+            symbolImg.alt = crypto.symbol;
+            symbolImg.classList.add('crypto-img'); // Apply CSS class for image size
+            symbolCell.appendChild(symbolImg);
 
-          nameCell.textContent = crypto.name;
-          priceCell.textContent = '$' + crypto.current_price.toLocaleString();
-        });
-      })
-      .catch(error => console.log(error));
+            nameCell.textContent = crypto.name;
+            priceCell.textContent = '$' + crypto.current_price.toLocaleString();
+          });
+        })
+        .catch(error => console.log(error));
+    }
+
+    function refreshPage() {
+      fetchData();
+    }
+
+    // Initial data fetch
+    fetchData();
   </script>
 </body>
 </html>
