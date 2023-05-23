@@ -27,6 +27,22 @@
             font-weight: bold;
             padding: 20px;
         }
+        
+        .error {
+            color: red;
+        }
+        
+        #cryptoTable {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
@@ -52,19 +68,56 @@
                 table += '</table>';
                 $('.loading').hide();
                 $('#cryptoTable').html(table);
+                
+                // Store the last refresh time in localStorage
+                var currentTime = new Date().getTime();
+                localStorage.setItem('lastRefreshTime', currentTime);
             });
         }
         
         $(document).ready(function() {
-            fetchData();
+            var lastRefreshTime = localStorage.getItem('lastRefreshTime');
+            var refreshLimit = 10 * 60 * 1000; // 10 minutes in milliseconds
+            
+            if (lastRefreshTime) {
+                var elapsedTime = new Date().getTime() - lastRefreshTime;
+                
+                if (elapsedTime < refreshLimit) {
+                    var remainingTime = Math.ceil((refreshLimit - elapsedTime) / 1000);
+                    $('.refresh-btn').html('Please wait ' + remainingTime + ' seconds before refreshing');
+                    $('.refresh-btn').attr('disabled', 'disabled');
+                    
+                    var countdownInterval = setInterval(function() {
+                        remainingTime--;
+                        $('.refresh-btn').html('Please wait ' + remainingTime + ' seconds before refreshing');
+                        
+                        if (remainingTime <= 0) {
+                            clearInterval(countdownInterval);
+                            $('.refresh-btn').html('Refresh Data');
+                            $('.refresh-btn').removeAttr('disabled');
+                        }
+                    }, 1000);
+                }
+            }
             
             $('.refresh-btn').click(function() {
                 fetchData();
+                
+                // Disable the refresh button for the specified time limit
+                $('.refresh-btn').attr('disabled', 'disabled');
+                $('.refresh-btn').html('Please wait 10 minutes before refreshing');
+                
+                setTimeout(function() {
+                    $('.refresh-btn').removeAttr('disabled');
+                    $('.refresh-btn').html('Refresh Data');
+                }, refreshLimit);
             });
         });
     </script>
 </head>
 <body>
+    <div class="header">Top 10 Crypto Currencies</div>
+    
     <div class="refresh-btn">
         <button>Refresh Data</button>
     </div>
