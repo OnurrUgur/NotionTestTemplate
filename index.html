@@ -1,69 +1,32 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Top 10 Cryptocurrencies</title>
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://api.coingecko.com;">
-  <style>
-    body {
-      color: #333333;
-      font-family: Arial, sans-serif;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    th, td {
-      padding: 8px;
-      text-align: left;
-      border-bottom: 1px solid #dddddd;
-    }
-    th {
-      background-color: #f2f2f2;
-    }
-  </style>
+    <title>Crypto Currency Tracker</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var apiEndpoint = 'https://api.coinmarketcap.com/data-api/v3/cryptocurrency/listing?start=1&limit=10&sortBy=market_cap&sortType=desc&convert=USD&cryptoType=all&tagType=all&audited=false';
+            
+            $.get(apiEndpoint, function(data) {
+                var currencies = data.data.cryptoCurrencyList;
+                var table = '<table>';
+                table += '<tr><th>Currency Name</th><th>Price (USD)</th></tr>';
+                
+                for (var i = 0; i < currencies.length; i++) {
+                    var currency = currencies[i];
+                    var name = currency.name;
+                    var price = currency.quotes[0].price;
+                    
+                    table += '<tr><td>' + name + '</td><td>' + price + '</td></tr>';
+                }
+                
+                table += '</table>';
+                $('#cryptoTable').html(table);
+            });
+        });
+    </script>
 </head>
 <body>
-  <h1>Top 10 Cryptocurrencies</h1>
-  <button onclick="refreshPage()">Refresh</button>
-  <table id="cryptoTable">
-    <tr>
-      <th>Symbol</th>
-      <th>Name</th>
-      <th>Price (USD)</th>
-    </tr>
-  </table>
-
-  <script>
-    // Fetch data from CoinGecko API
-    function fetchData() {
-      fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1')
-        .then(response => response.json())
-        .then(data => {
-          // Clear previous table data
-          const table = document.getElementById('cryptoTable');
-          table.innerHTML = '';
-
-          // Populate table with fetched data
-          data.forEach((crypto, index) => {
-            const row = table.insertRow(index);
-            const symbolCell = row.insertCell(0);
-            const nameCell = row.insertCell(1);
-            const priceCell = row.insertCell(2);
-
-            symbolCell.textContent = crypto.symbol;
-            nameCell.textContent = crypto.name;
-            priceCell.textContent = '$' + crypto.current_price.toLocaleString();
-          });
-        })
-        .catch(error => console.log(error));
-    }
-
-    function refreshPage() {
-      fetchData();
-    }
-
-    // Initial data fetch
-    fetchData();
-  </script>
+    <div id="cryptoTable"></div>
 </body>
 </html>
