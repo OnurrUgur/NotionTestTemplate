@@ -1,112 +1,151 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Crypto Currency Tracker</title>
-    <style>
-        body {
-            background-color: #1c1c1c;
-            color: #ffffff;
-            font-family: Arial, sans-serif;
-            font-size: 14px;
-            margin: 0;
-            padding: 0;
-            text-align: left;
+<!-- TradingView Widget BEGIN -->
+<div class="tradingview-widget-container">
+  <div class="tradingview-widget-container__widget"></div>
+  <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank"><span class="blue-text">Track all markets on TradingView</span></a></div>
+  <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
+  {
+  "colorTheme": "dark",
+  "dateRange": "12M",
+  "showChart": true,
+  "locale": "en",
+  "largeChartUrl": "",
+  "isTransparent": false,
+  "showSymbolLogo": true,
+  "showFloatingTooltip": false,
+  "width": "400",
+  "height": "660",
+  "plotLineColorGrowing": "rgba(41, 98, 255, 1)",
+  "plotLineColorFalling": "rgba(41, 98, 255, 1)",
+  "gridLineColor": "rgba(240, 243, 250, 0)",
+  "scaleFontColor": "rgba(106, 109, 120, 1)",
+  "belowLineFillColorGrowing": "rgba(41, 98, 255, 0.12)",
+  "belowLineFillColorFalling": "rgba(41, 98, 255, 0.12)",
+  "belowLineFillColorGrowingBottom": "rgba(41, 98, 255, 0)",
+  "belowLineFillColorFallingBottom": "rgba(41, 98, 255, 0)",
+  "symbolActiveColor": "rgba(41, 98, 255, 0.12)",
+  "tabs": [
+    {
+      "title": "Indices",
+      "symbols": [
+        {
+          "s": "FOREXCOM:SPXUSD",
+          "d": "S&P 500"
+        },
+        {
+          "s": "FOREXCOM:NSXUSD",
+          "d": "US 100"
+        },
+        {
+          "s": "FOREXCOM:DJI",
+          "d": "Dow 30"
+        },
+        {
+          "s": "INDEX:NKY",
+          "d": "Nikkei 225"
+        },
+        {
+          "s": "INDEX:DEU40",
+          "d": "DAX Index"
+        },
+        {
+          "s": "FOREXCOM:UKXGBP",
+          "d": "UK 100"
         }
-        
-        .header {
-            font-size: 20px;
-            font-weight: bold;
-            margin: 10px;
+      ],
+      "originalTitle": "Indices"
+    },
+    {
+      "title": "Futures",
+      "symbols": [
+        {
+          "s": "CME_MINI:ES1!",
+          "d": "S&P 500"
+        },
+        {
+          "s": "CME:6E1!",
+          "d": "Euro"
+        },
+        {
+          "s": "COMEX:GC1!",
+          "d": "Gold"
+        },
+        {
+          "s": "NYMEX:CL1!",
+          "d": "Crude Oil"
+        },
+        {
+          "s": "NYMEX:NG1!",
+          "d": "Natural Gas"
+        },
+        {
+          "s": "CBOT:ZC1!",
+          "d": "Corn"
         }
-        
-        .widget {
-            background-color: #2c2c2c;
-            border-radius: 8px;
-            margin: 10px;
-            padding: 10px;
-            width: 500px;
+      ],
+      "originalTitle": "Futures"
+    },
+    {
+      "title": "Bonds",
+      "symbols": [
+        {
+          "s": "CME:GE1!",
+          "d": "Eurodollar"
+        },
+        {
+          "s": "CBOT:ZB1!",
+          "d": "T-Bond"
+        },
+        {
+          "s": "CBOT:UB1!",
+          "d": "Ultra T-Bond"
+        },
+        {
+          "s": "EUREX:FGBL1!",
+          "d": "Euro Bund"
+        },
+        {
+          "s": "EUREX:FBTP1!",
+          "d": "Euro BTP"
+        },
+        {
+          "s": "EUREX:FGBM1!",
+          "d": "Euro BOBL"
         }
-        
-        table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 5px;
+      ],
+      "originalTitle": "Bonds"
+    },
+    {
+      "title": "Forex",
+      "symbols": [
+        {
+          "s": "FX:EURUSD",
+          "d": "EUR/USD"
+        },
+        {
+          "s": "FX:GBPUSD",
+          "d": "GBP/USD"
+        },
+        {
+          "s": "FX:USDJPY",
+          "d": "USD/JPY"
+        },
+        {
+          "s": "FX:USDCHF",
+          "d": "USD/CHF"
+        },
+        {
+          "s": "FX:AUDUSD",
+          "d": "AUD/USD"
+        },
+        {
+          "s": "FX:USDCAD",
+          "d": "USD/CAD"
         }
-        
-        th, td {
-            padding: 8px;
-            border: 1px solid white;
-            text-align: center;
-        }
-        
-        th {
-            background-color: white;
-            color: #000000;
-            border-top-left-radius: 8px;
-            border-top-right-radius: 8px;
-        }
-        
-        .currency-name,
-        .price {
-            font-size: 14px;
-            font-weight: normal;
-        }
-        
-        .symbol {
-            width: 48px;
-            height: 48px;
-            padding: 0;
-        }
-    </style>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        function fetchData() {
-            var apiEndpoint = 'https://api.coincap.io/v2/assets?limit=10';
-            
-            $.get(apiEndpoint, function(data) {
-                var currencies = data.data;
-                var table = '<table>';
-                
-                table += '<tr><th>Symbol</th><th>Name</th><th>Price (USD)</th></tr>';
-                
-                for (var i = 0; i < currencies.length; i++) {
-                    var currency = currencies[i];
-                    var symbol = currency.symbol;
-                    var name = currency.name;
-                    var price = currency.priceUsd;
-                    var imageSrc = 'data:image/svg+xml,' + encodeURIComponent(generateSymbolImage(symbol)); // Generate SVG image
-                    
-                    table += '<tr><td class="symbol"><img src="' + imageSrc + '" alt="' + symbol + '" width="48" height="48"></td><td class="currency-name">' + name + '</td><td class="price">$' + price + '</td></tr>';
-                }
-                
-                table += '</table>';
-                $('#cryptoTable').html(table);
-            });
-        }
-        
-        // Generate SVG image for the symbol
-        function generateSymbolImage(symbol) {
-            return `
-                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
-                    <rect width="48" height="48" fill="#2c2c2c"/>
-                    <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="20" fill="#ffffff">${symbol}</text>
-                </svg>
-            `;
-        }
-        
-        $(document).ready(function() {
-            fetchData();
-            
-            // Refresh data every 10 minutes
-            setInterval(fetchData, 600000);
-        });
-    </script>
-</head>
-<body>
-    <div class="widget">
-        <div class="header">Top 10 Crypto Currencies</div>
-        
-        <div id="cryptoTable"></div>
-    </div>
-</body>
-</html>
+      ],
+      "originalTitle": "Forex"
+    }
+  ]
+}
+  </script>
+</div>
+<!-- TradingView Widget END -->
