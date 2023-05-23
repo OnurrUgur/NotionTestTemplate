@@ -14,6 +14,9 @@
         }
         
         .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             font-size: 20px;
             font-weight: bold;
             margin: 10px;
@@ -47,9 +50,15 @@
             font-weight: bold;
             font-size: 16px;
         }
+        
+        .refresh-button {
+            cursor: pointer;
+        }
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+        var canRefresh = true;
+        
         function fetchData() {
             var apiEndpoint = 'https://api.coincap.io/v2/assets?limit=10';
             
@@ -74,6 +83,19 @@
             });
         }
         
+        function refreshData() {
+            if (canRefresh) {
+                canRefresh = false;
+                fetchData();
+                
+                setTimeout(function() {
+                    canRefresh = true;
+                }, 600000); // 10 minutes
+            } else {
+                alert('You can only refresh once in 10 minutes.');
+            }
+        }
+        
         $(document).ready(function() {
             fetchData();
             
@@ -84,7 +106,10 @@
 </head>
 <body>
     <div class="widget">
-        <div class="header">Top 10 Crypto Currencies</div>
+        <div class="header">
+            <div>Top 10 Crypto Currencies</div>
+            <img class="refresh-button" src="refresh.png" alt="Refresh" width="24" height="24" onclick="refreshData()" />
+        </div>
         
         <div id="cryptoTable"></div>
     </div>
