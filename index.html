@@ -2,32 +2,77 @@
 <html>
 <head>
     <title>Crypto Currency Tracker</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+        }
+        
+        th {
+            background-color: #f2f2f2;
+        }
+        
+        .refresh-btn {
+            margin-bottom: 10px;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            font-weight: bold;
+            padding: 20px;
+        }
+    </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        $(document).ready(function() {
+        function fetchData() {
+            $('.loading').show();
+            
             var apiEndpoint = 'https://api.coincap.io/v2/assets?limit=10';
             
             $.get(apiEndpoint, function(data) {
                 var currencies = data.data;
                 var table = '<table>';
-                table += '<tr><th>Currency Name</th><th>Price (USD)</th><th>Image</th></tr>';
+                table += '<tr><th colspan="2">Top 10 Crypto Currencies</th></tr>';
+                table += '<tr><th>Currency Name</th><th>Price (USD)</th></tr>';
                 
                 for (var i = 0; i < currencies.length; i++) {
                     var currency = currencies[i];
                     var name = currency.name;
                     var price = currency.priceUsd;
-                    var image = currency.iconUrl;
                     
-                    table += '<tr><td>' + name + '</td><td>' + price + '</td><td><img src="' + image + '" width="48" height="48"></td></tr>';
+                    table += '<tr><td>' + name + '</td><td>' + price + '</td></tr>';
                 }
                 
                 table += '</table>';
+                $('.loading').hide();
                 $('#cryptoTable').html(table);
+            });
+        }
+        
+        $(document).ready(function() {
+            fetchData();
+            
+            $('.refresh-btn').click(function() {
+                fetchData();
             });
         });
     </script>
 </head>
 <body>
+    <div class="refresh-btn">
+        <button>Refresh Data</button>
+    </div>
+    
+    <div class="loading">
+        Loading...
+    </div>
+    
     <div id="cryptoTable"></div>
 </body>
 </html>
