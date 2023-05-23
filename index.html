@@ -3,6 +3,10 @@
 <head>
   <title>Top 10 Cryptocurrencies</title>
   <style>
+    body {
+      color: #333333;
+      font-family: Arial, sans-serif;
+    }
     table {
       width: 100%;
       border-collapse: collapse;
@@ -10,23 +14,16 @@
     th, td {
       padding: 8px;
       text-align: left;
-      border-bottom: 1px solid #ddd;
+      border-bottom: 1px solid #dddddd;
     }
     th {
       background-color: #f2f2f2;
-    }
-    .crypto-img {
-      width: 48px;
-      height: 48px;
-    }
-    .refresh-button {
-      margin-bottom: 10px;
     }
   </style>
 </head>
 <body>
   <h1>Top 10 Cryptocurrencies</h1>
-  <button class="refresh-button" onclick="refreshPage()">Refresh</button>
+  <button onclick="refreshPage()">Refresh</button>
   <table id="cryptoTable">
     <tr>
       <th>Symbol</th>
@@ -52,29 +49,12 @@
             const nameCell = row.insertCell(1);
             const priceCell = row.insertCell(2);
 
-            const symbolImg = document.createElement('img');
-            symbolImg.src = getSymbolImageUrl(crypto.symbol); // Replace with image URL for the symbol
-            symbolImg.alt = crypto.symbol;
-            symbolImg.classList.add('crypto-img'); // Apply CSS class for image size
-            symbolCell.appendChild(symbolImg);
-
+            symbolCell.textContent = crypto.symbol;
             nameCell.textContent = crypto.name;
             priceCell.textContent = '$' + crypto.current_price.toLocaleString();
           });
         })
         .catch(error => console.log(error));
-    }
-
-    function getSymbolImageUrl(symbol) {
-      // Map currency symbols to image URLs
-      const symbolImageMap = {
-        BTC: 'https://example.com/btc.png',
-        ETH: 'https://example.com/eth.png',
-        // Add more symbol-image mappings here
-      };
-
-      // Return the image URL for the symbol
-      return symbolImageMap[symbol] || '';
     }
 
     function refreshPage() {
