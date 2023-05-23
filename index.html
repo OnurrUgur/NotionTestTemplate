@@ -62,7 +62,11 @@
                     var name = currency.name;
                     var price = currency.priceUsd;
                     
-                    table += '<tr><td class="currency-name">' + name + '</td><td class="price">$' + price + '</td></tr>';
+                    if (name === 'Bitcoin') {
+                        table += '<tr><td class="currency-name">' + name + '</td><td class="price">$' + price + '</td></tr>';
+                    } else {
+                        table += '<tr><td class="currency-name">' + name + '</td><td class="price" colspan="2">$' + price + '</td></tr>';
+                    }
                 }
                 
                 table += '</table>';
