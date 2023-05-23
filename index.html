@@ -14,9 +14,6 @@
         }
         
         .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             font-size: 20px;
             font-weight: bold;
             margin: 10px;
@@ -32,14 +29,21 @@
         
         table {
             width: 100%;
+            border-collapse: separate;
+            border-spacing: 5px;
         }
         
         th, td {
-            padding: 8px 0;
+            padding: 8px;
+            border: 1px solid white;
         }
         
         th {
             text-align: left;
+            background-color: white;
+            color: #000000;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
         }
         
         .currency-name {
@@ -50,15 +54,9 @@
             font-weight: bold;
             font-size: 16px;
         }
-        
-        .refresh-button {
-            cursor: pointer;
-        }
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        var canRefresh = true;
-        
         function fetchData() {
             var apiEndpoint = 'https://api.coincap.io/v2/assets?limit=10';
             
@@ -71,29 +69,12 @@
                     var name = currency.name;
                     var price = currency.priceUsd;
                     
-                    if (name === 'Bitcoin') {
-                        table += '<tr><td class="currency-name">' + name + '</td><td class="price">$' + price + '</td></tr>';
-                    } else {
-                        table += '<tr><td class="currency-name">' + name + '</td><td class="price" colspan="2">$' + price + '</td></tr>';
-                    }
+                    table += '<tr><td class="currency-name">' + name + '</td><td class="price">$' + price + '</td></tr>';
                 }
                 
                 table += '</table>';
                 $('#cryptoTable').html(table);
             });
-        }
-        
-        function refreshData() {
-            if (canRefresh) {
-                canRefresh = false;
-                fetchData();
-                
-                setTimeout(function() {
-                    canRefresh = true;
-                }, 600000); // 10 minutes
-            } else {
-                alert('You can only refresh once in 10 minutes.');
-            }
         }
         
         $(document).ready(function() {
@@ -106,10 +87,7 @@
 </head>
 <body>
     <div class="widget">
-        <div class="header">
-            <div>Top 10 Crypto Currencies</div>
-            <img class="refresh-button" src="refresh.png" alt="Refresh" width="24" height="24" onclick="refreshData()" />
-        </div>
+        <div class="header">Top 10 Crypto Currencies</div>
         
         <div id="cryptoTable"></div>
     </div>
